@@ -66,9 +66,9 @@
       // added 0.2.1: work-around for iOS/Safari running from an iFrame (e.g. from itch.io page):
       // touch events only register after adding dummy listeners on document.
 
-      document.addEventListener("touchstart", {});
-      document.addEventListener("touchmove", {});
-      document.addEventListener("touchend", {});
+      document.addEventListener("touchstart", function(){});
+      document.addEventListener("touchmove", function(){});
+      document.addEventListener("touchend", function(){});
 
       // --------------------------------------------------------------------------------------------------------------------------------
       // pico-8 0.2.2: allow dropping files
@@ -1264,7 +1264,7 @@
         // from @ultrabrite's shell: test if an AudioContext can be created outside of an event callback.
         // If it can't be created, then require pressing the start button to run the cartridge
 
-        if (p8_autoplay) {
+        /* if (p8_autoplay) {
           var temp_context = new AudioContext();
           temp_context.onstatechange = function () {
             if (temp_context.state == "running") {
@@ -1272,6 +1272,11 @@
               temp_context.close();
             }
           };
+        } */
+
+        if (p8_autoplay) {
+          // 直接启动游戏，不管音频上下文
+          setTimeout(p8_run_cart, 100);
         }
 
         // pointer lock request needs to be inside a canvas interaction event
@@ -1285,12 +1290,39 @@
 
       <!-- Add content below the cart here -->
 
-      <div id="dtext" style="display: none">
-        分数:<span id="score-board"></span>
-      </div>
-
-	  <script src="board.js"></script>
     </div>
     <!-- body_0 -->
+
+    <div id="dtext" style="display: none">
+      分数:<span id="score-board"></span>
+    </div>
+    <style>
+      /* 你的样式 */
+      #dtext {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #ccb507;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 18px;
+        z-index: 9999;
+        display: none;
+      }
+
+      /* 手机端适配 */
+      @media (max-width: 768px) {
+        #dtext {
+          top: 10px;
+          right: 10px;
+          font-size: 14px;
+          padding: 6px 12px;
+        }
+      }
+    </style>
+
+      <script src="board.js"></script>
   </body>
 </html>
